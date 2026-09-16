@@ -3,9 +3,27 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 
 from app.core.config import settings
-from app.core.database import AsyncSessionLocal
+from app.core.database import AsyncSessionLocal, engine 
 
 from app.api.course import router as course_router
+from app.api.auth import router as auth_router
+import logging
+from contextlib import asynccontextmanager
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s | %(levelname)s | %(name)s | %(message)s"
+)
+
+logger = logging.getLogger("learnos")
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    logger.info("Starting %s", settings.app_name)
+    yield
+    logger.info("Shutting down %s", settings.app_name)
+
+    await engine.dispose()
 
 app = FastAPI(
     title= settings.app_name,
@@ -15,16 +33,14 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        
-    ],
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.include_router(course_router)
+app.include_router(course_router, prefix=settings.api_v1_prefix)
+app.include_router(auth_router, prefix=settings.api_v1_prefix)
 
 @app.get("/health")
 async def health_check():

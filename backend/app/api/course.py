@@ -12,7 +12,7 @@ from app.services.enrollment import AlreadyEnrolledError, CourseNotFoundError, E
 
 
 router = APIRouter(
-    prefix="/api/v1/courses",
+    prefix="/courses",
     tags=["Courses"],
 )
 

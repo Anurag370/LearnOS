@@ -9,3 +9,7 @@ pydantic-settings
 
 pytest
 httpx
+
+python-jose[cryptography]
+pwdlib[argon2]
+email-validator
