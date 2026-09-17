@@ -1,18 +1,56 @@
-from fastapi import HTTPException, status
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.auth.jwt import decode_access_token
+from app.core.database import get_db
+from app.core.database import get_db
+from app.models.user import User
+from app.repositories.user import UserRepository
 
 
-async def get_current_user_id() -> int:
-    """
-    Temporary development authentication dependency.
+security = HTTPBearer()
 
-    This will be replaced by JWT authentication in Phase 2.
-    """
-    user_id = 1
+async def get_current_user(credentials:HTTPAuthorizationCredentials = Depends(security), session: AsyncSession = Depends(get_db)) -> User:
 
-    if user_id is None:
+    token = credentials.credentials
+
+    try:
+        payload = decode_access_token(token)
+    except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Authentication required",
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"}
         )
 
-    return user_id
+    subject = payload.get("sub")
+
+    if subject is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or expired token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    try:
+        user_id = int(subject)
+    except (TypeError, ValueError):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid auth token",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+    repository = UserRepository(session)
+
+    user = await repository.get_by_id(user_id)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User no longer exists",
+            headers={"WWW-Authenticate":"Bearer"}
+        )
+
+    return user
