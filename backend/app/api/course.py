@@ -5,7 +5,7 @@ from app.core.database import get_db
 from app.repositories.course import CourseRepository
 from app.schemas.course import CourseListResponse, CourseResponse
 from app.services.course import CourseService
-from app.api.dependencies import get_current_user
+from app.api.dependencies import require_student
 from app.repositories.enrollment import EnrollementRepository
 from app.schemas.enrollment import EnrollmentResponse
 from app.services.enrollment import AlreadyEnrolledError, CourseNotFoundError, EnrollmentService
@@ -49,7 +49,7 @@ async def get_course(course_id: int, service: CourseService = Depends(get_course
 
 
 @router.post("/{course_id}/enroll", response_model=EnrollmentResponse, status_code=status.HTTP_201_CREATED)
-async def enroll_in_courses(course_id: int, current_user:User = Depends(get_current_user), service: EnrollmentService = Depends(get_enrollemnt_service)):
+async def enroll_in_courses(course_id: int, current_user:User = Depends(require_student), service: EnrollmentService = Depends(get_enrollemnt_service)):
 
     try:
         return await service.enroll(current_user.id, course_id)
@@ -68,7 +68,7 @@ async def enroll_in_courses(course_id: int, current_user:User = Depends(get_curr
 
 
 @router.get("/{course_id}/enrollment", response_model=EnrollmentResponse)
-async def get_course_enrollment(course_id:int, current_user:User = Depends(get_current_user), service:EnrollmentService = Depends(get_enrollemnt_service)):
+async def get_course_enrollment(course_id:int, current_user:User = Depends(require_student), service:EnrollmentService = Depends(get_enrollemnt_service)):
 
     enrollment = await service.get_enrollment(user_id=current_user.id, course_id=course_id)
 

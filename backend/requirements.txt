@@ -8,7 +8,9 @@ alembic
 pydantic-settings
 
 pytest
+pytest-asyncio
 httpx
+aiosqlite
 
 python-jose[cryptography]
 pwdlib[argon2]
