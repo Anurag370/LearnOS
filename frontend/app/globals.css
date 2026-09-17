@@ -1,22 +1,77 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+
+  --surface-0: #f9fafb;
+  --surface-1: #ffffff;
+  --surface-2: #f3f4f6;
+  --surface-hover: #f3f4f6;
+  --outline: #e5e7eb;
+  --input: #d1d5db;
+  --strong: #111827;
+  --muted: #6b7280;
+  --dim: #4b5563;
+  --label: #374151;
+  --accent: #2563eb;
+
+  --error-bg: #fef2f2;
+  --error-text: #dc2626;
+  --error-border: #fecaca;
+  --success-bg: #f0fdf4;
+  --success-text: #16a34a;
+  --success-border: #bbf7d0;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+
+  --surface-0: #030712;
+  --surface-1: #111827;
+  --surface-2: #1f2937;
+  --surface-hover: #111827;
+  --outline: #1f2937;
+  --input: #374151;
+  --strong: #ffffff;
+  --muted: #9ca3af;
+  --dim: #6b7280;
+  --label: #d1d5db;
+  --accent: #60a5fa;
+
+  --error-bg: #450a0a;
+  --error-text: #f87171;
+  --error-border: #7f1d1d;
+  --success-bg: #052e16;
+  --success-text: #4ade80;
+  --success-border: #14532d;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-surface-0: var(--surface-0);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-hover: var(--surface-hover);
+  --color-outline: var(--outline);
+  --color-input: var(--input);
+  --color-strong: var(--strong);
+  --color-muted: var(--muted);
+  --color-dim: var(--dim);
+  --color-label: var(--label);
+  --color-accent: var(--accent);
+
+  --color-error-bg: var(--error-bg);
+  --color-error-text: var(--error-text);
+  --color-error-border: var(--error-border);
+  --color-success-bg: var(--success-bg);
+  --color-success-text: var(--success-text);
+  --color-success-border: var(--success-border);
 }
 
 body {
