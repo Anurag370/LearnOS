@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from app.models.enrollment import Enrollment
+    from app.models.profile import StudentProfile
 
 from datetime import datetime
 
@@ -58,39 +59,3 @@ class User(Base):
         cascade="all, delete-orphan",
     )
 
-class StudentProfile(Base):
-    __tablename__ = "student_profiles"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-
-    user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id"),
-        nullable=False,
-        unique=True,
-    )
-
-    current_skill_level: Mapped[str | None] = mapped_column(
-        String(50),
-        nullable=True,
-    )
-
-    available_study_minutes: Mapped[int | None] = mapped_column(
-        nullable=True,
-    )
-
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        nullable=False,
-    )
-
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True),
-        server_default=func.now(),
-        onupdate=func.now(),
-        nullable=False,
-    )
-
-    user: Mapped["User"] = relationship(
-        back_populates="student_profile",
-    )
