@@ -6,6 +6,7 @@ from app.core.database import get_db
 from app.models.user import User
 from app.repositories.course import CourseRepository
 from app.repositories.learning_goal import LearningGoalRepository
+from app.repositories.enrollment import EnrollementRepository
 from app.schemas.learning_goal import (
     LearningGoalCreate,
     LearningGoalResponse,
@@ -13,6 +14,12 @@ from app.schemas.learning_goal import (
 )
 from app.services.learning_goal import (
     CourseNotFoundError,
+    LearningGoalNotFoundError,
+    LearningGoalService,
+)
+from app.services.learning_goal import (
+    CourseNotFoundError,
+    CourseNotEnrolledError,
     LearningGoalNotFoundError,
     LearningGoalService,
 )
@@ -31,6 +38,7 @@ def get_learning_goal_service(
         session=session,
         repository=LearningGoalRepository(session),
         course_repository=CourseRepository(session),
+        enrollment_repository=EnrollementRepository(session)
     )
 
 
@@ -68,6 +76,11 @@ async def create_learning_goal(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Course not found",
+        )
+    except CourseNotEnrolledError:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You must be enrolled in this course before creating a lerning goal"
         )
 
 

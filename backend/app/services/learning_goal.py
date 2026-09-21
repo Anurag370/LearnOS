@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.models.learning_goal import LearningGoal
 from app.repositories.course import CourseRepository
 from app.repositories.learning_goal import LearningGoalRepository
+from app.repositories.enrollment import EnrollementRepository
 
 
 class CourseNotFoundError(Exception):
@@ -14,6 +15,8 @@ class CourseNotFoundError(Exception):
 class LearningGoalNotFoundError(Exception):
     pass
 
+class CourseNotEnrolledError(Exception):
+    pass
 
 class LearningGoalService:
     def __init__(
@@ -21,10 +24,12 @@ class LearningGoalService:
         session: AsyncSession,
         repository: LearningGoalRepository,
         course_repository: CourseRepository,
+        enrollment_repository: EnrollementRepository
     ):
         self.session = session
         self.repository = repository
         self.course_repository = course_repository
+        self.enrollment_repository = enrollment_repository
 
     async def list_goals(
         self,
@@ -45,6 +50,14 @@ class LearningGoalService:
 
         if course is None:
             raise CourseNotFoundError
+        
+        enrollment = (await self.enrollment_repository.get_by_user_and_course(
+            user_id=user_id,
+            course_id=course_id
+        ))
+
+        if enrollment is None:
+            raise CourseNotEnrolledError
 
         goal = await self.repository.create(
             user_id=user_id,

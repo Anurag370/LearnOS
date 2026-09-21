@@ -40,7 +40,7 @@ async def test_create_learning_goal(client, session, user_token):
     assert data["description"] == GOAL_PAYLOAD["description"]
     assert data["target_date"] == GOAL_PAYLOAD["target_date"]
     assert data["desired_outcome"] == GOAL_PAYLOAD["desired_outcome"]
-    assert data["status"] == "in_progress"
+    assert data["status"] == "ACTIVE"
 
 
 async def test_create_learning_goal_returns_404_for_missing_course(
