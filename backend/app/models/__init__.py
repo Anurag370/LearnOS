@@ -4,6 +4,7 @@ from app.models.user import User
 from app.models.profile import StudentProfile
 from app.models.learning_goal import LearningGoal
 from app.models.learning_plan import LearningPlan, LearningPlanItem
+from app.models.document import Document, DocumentChunk
 
 __all__ = [
     "User",
@@ -15,5 +16,7 @@ __all__ = [
     "Enrollment",
     "LearningGoal",
     "LearningPlan",
-    "LearningPlanItem"
+    "LearningPlanItem",
+    "Document",
+    "DocumentChunk"
 ]
