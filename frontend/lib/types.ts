@@ -52,3 +52,23 @@ export interface UpdateLearningGoalRequest {
   target_date?: string | null;
   desired_outcome?: string | null;
 }
+
+export interface LearningPlanItem {
+  id: number;
+  plan_id: number;
+  lesson_id: number;
+  position: number;
+  status: string;
+}
+
+export interface LearningPlan {
+  id: number;
+  user_id: number;
+  learning_goal_id: number;
+  status: string;
+  items: LearningPlanItem[];
+}
+
+export interface LearningPlanItemStatusUpdate {
+  status: string;
+}

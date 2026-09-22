@@ -1,0 +1,12 @@
+PLAN_STATUSES = {
+    "ACTIVE",
+    "COMPLETED",
+    "ARCHIVED",
+}
+
+PLAN_ITEM_STATUSES = {
+    "PENDING",
+    "IN_PROGRESS",
+    "COMPLETED",
+    "SKIPPED",
+}

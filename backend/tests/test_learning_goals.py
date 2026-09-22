@@ -17,6 +17,14 @@ async def seed_course(session, slug: str = "goals-course") -> Course:
     return course
 
 
+async def enroll(client, token: str, course_id: int):
+    response = await client.post(
+        f"/api/v1/courses/{course_id}/enroll",
+        headers=_auth(token),
+    )
+    assert response.status_code == 201
+
+
 GOAL_PAYLOAD = {
     "description": "Learn Python fundamentals",
     "target_date": "2026-12-31",
@@ -27,6 +35,8 @@ GOAL_PAYLOAD = {
 async def test_create_learning_goal(client, session, user_token):
     course = await seed_course(session)
     token = await user_token("goal-creator@example.com")
+
+    await enroll(client, token, course.id)
 
     response = await client.post(
         GOALS_PREFIX,
@@ -72,6 +82,7 @@ async def test_list_learning_goals_returns_only_current_user(client, session, us
     course = await seed_course(session)
     token = await user_token("list-owner@example.com")
 
+    await enroll(client, token, course.id)
     await client.post(GOALS_PREFIX, json={"course_id": course.id, **GOAL_PAYLOAD}, headers=_auth(token))
 
     me = await client.get("/api/v1/auth/me", headers=_auth(token))
@@ -89,6 +100,8 @@ async def test_list_learning_goals_returns_only_current_user(client, session, us
 async def test_update_learning_goal(client, session, user_token):
     course = await seed_course(session)
     token = await user_token("goal-updater@example.com")
+
+    await enroll(client, token, course.id)
 
     created = await client.post(
         GOALS_PREFIX,
@@ -117,12 +130,22 @@ async def test_update_learning_goal_returns_404_for_other_user_goal(
     owner_token = await user_token("goal-owner@example.com")
     other_user_token = await user_token("goal-stranger@example.com")
 
+    await enroll(client, owner_token, course.id)
+
     created = await client.post(
         GOALS_PREFIX,
         json={"course_id": course.id, **GOAL_PAYLOAD},
         headers=_auth(owner_token),
     )
     goal_id = created.json()["id"]
+
+    # The owner may only create goals for courses they are enrolled in.
+    owner_goal_id_response = await client.post(
+        GOALS_PREFIX,
+        json={"course_id": course.id, **GOAL_PAYLOAD},
+        headers=_auth(other_user_token),
+    )
+    assert owner_goal_id_response.status_code == 403
 
     response = await client.put(
         f"{GOALS_PREFIX}/{goal_id}",

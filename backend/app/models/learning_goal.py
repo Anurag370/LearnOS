@@ -1,3 +1,8 @@
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from app.models.learning_plan import LearningPlan
+    
 from datetime import date, datetime
 
 from sqlalchemy import Date, DateTime, ForeignKey, String, Text, func
@@ -26,3 +31,9 @@ class LearningGoal(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
     updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+
+    learning_plan: Mapped["LearningPlan | None"] = relationship(
+    back_populates="goal",
+    uselist=False,
+    cascade="all, delete-orphan",
+)

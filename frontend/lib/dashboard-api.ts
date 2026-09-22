@@ -22,7 +22,6 @@ export async function getDashboardData(): Promise<DashboardData> {
       enrolledCourse = course;
       break;
     } catch {
-      // Current user is not enrolled in this course.
     }
   }
 

@@ -23,6 +23,11 @@ const navigation = [
     icon: "🎯",
   },
   {
+    name: "Learning Plan",
+    href: "/plans",
+    icon: "📝"
+  },
+  {
     name: "Progress",
     href: "/progress",
     icon: "📊",
