@@ -10,6 +10,7 @@ from app.api.auth import router as auth_router
 from app.api.profile import router as profile_router
 from app.api.learning_goals import router as learning_goals_router
 from app.api.learning_plans import router as learning_plans_router
+from app.api.tutor import router as tutor_router
 
 import logging
 from contextlib import asynccontextmanager
@@ -48,6 +49,7 @@ app.include_router(auth_router, prefix=settings.api_v1_prefix)
 app.include_router(profile_router, prefix=settings.api_v1_prefix)
 app.include_router(learning_goals_router, prefix=settings.api_v1_prefix,)
 app.include_router(learning_plans_router, prefix=settings.api_v1_prefix)
+app.include_router(tutor_router, prefix=settings.api_v1_prefix)
 
 @app.get("/health")
 async def health_check():

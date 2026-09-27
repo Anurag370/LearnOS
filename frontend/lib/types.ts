@@ -72,3 +72,15 @@ export interface LearningPlan {
 export interface LearningPlanItemStatusUpdate {
   status: string;
 }
+
+export interface TutorCitation {
+  chunk_id: number;
+  document_id: number;
+  source: string;
+  page_number: number | null;
+}
+
+export interface TutorAnswerResponse {
+  answer: string;
+  citations: TutorCitation[];
+}

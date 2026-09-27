@@ -15,3 +15,14 @@ aiosqlite
 python-jose[cryptography]
 pwdlib[argon2]
 email-validator
+
+langchain
+langchain-core
+langchain-community
+langgraph
+langchain-text-splitters
+pypdf
+langchain-huggingface
+langchain-groq
+sentence-transformers
+pgvector
