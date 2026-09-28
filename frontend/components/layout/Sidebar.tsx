@@ -22,8 +22,8 @@ const navigation = [
     href: "/goals",
     icon: "🎯",
   },
-  {4
-  
+  {
+
     name: "Learning Plan",
     href: "/plans",
     icon: "📝"
